@@ -1,0 +1,7 @@
+C:\IIS\Learn_Series\Learn_Knockout\MVC3_Knockout\Mvc3_Knockout\bin\Mvc3_Knockout.dll
+C:\IIS\Learn_Series\Learn_Knockout\MVC3_Knockout\Mvc3_Knockout\bin\Mvc3_Knockout.pdb
+C:\IIS\Learn_Series\Learn_Knockout\MVC3_Knockout\Mvc3_Knockout\bin\EntityFramework.dll
+C:\IIS\Learn_Series\Learn_Knockout\MVC3_Knockout\Mvc3_Knockout\bin\EntityFramework.xml
+C:\IIS\Learn_Series\Learn_Knockout\MVC3_Knockout\Mvc3_Knockout\obj\Debug\ResolveAssemblyReference.cache
+C:\IIS\Learn_Series\Learn_Knockout\MVC3_Knockout\Mvc3_Knockout\obj\Debug\Mvc3_Knockout.dll
+C:\IIS\Learn_Series\Learn_Knockout\MVC3_Knockout\Mvc3_Knockout\obj\Debug\Mvc3_Knockout.pdb

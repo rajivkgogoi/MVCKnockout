@@ -1,0 +1,27 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+using System;
+using System.Web.Routing;
+using Microsoft.ApplicationServer.Http;
+using Microsoft.ApplicationServer.Http.Activation;
+using Microsoft.ApplicationServer.Http.Description;
+<# if (Model.UseIoC) { #>
+using <#= Model.Namespace #>.DependencyResolution;
+<# } #>
+
+[assembly: WebActivator.PreApplicationStartMethod(typeof(<#= Model.Namespace #>.App_Start.<#= Model.ApiName #>Start), "Start")]
+
+namespace <#= Model.Namespace #>.App_Start {
+    public static class <#= Model.ApiName #>Start {
+        public static void Start() {
+<# if (Model.UseIoC) { #>
+			var iocContainer = IoC.Initialize();
+            var config = new WebApiConfiguration();
+            config.CreateInstance = (type, instance, message) => { return iocContainer.GetInstance(type); };
+            config.EnableTestClient = true;
+            RouteTable.Routes.SetDefaultHttpConfiguration(config);
+<# } #>
+            RouteTable.Routes.MapServiceRoute<<#= Model.ApiName #>>("<#= Model.Route #>");
+        }
+    }
+}

@@ -1,0 +1,44 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.ServiceModel;
+using System.ServiceModel.Web;
+using Microsoft.ApplicationServer.Http;
+using Microsoft.ApplicationServer.Http.Dispatcher;
+using <#= Model.Namespace #>.Models;
+using <#= Model.Namespace #>.Resources;
+
+namespace <#= Model.Namespace #>
+{ 
+	[ServiceContract]
+    public class <#= Model.ApiName #>
+    {
+        [WebGet(UriTemplate = "{id}")]
+        public HttpResponseMessage<<#= Model.ResourceName #>> Get(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        [WebInvoke(UriTemplate = "", Method = "POST")]
+        public HttpResponseMessage<<#= Model.ResourceName #>> Post(<#= Model.ResourceName #> item)
+        {
+            throw new NotImplementedException();
+        }
+
+        [WebInvoke(UriTemplate = "{id}", Method = "PUT")]
+        public <#= Model.ResourceName #> Put(int id, <#= Model.ResourceName #> item)
+        {
+            throw new NotImplementedException();
+        }
+
+        [WebInvoke(UriTemplate = "{id}", Method = "DELETE")]
+        public HttpResponseMessage Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
+	}
+}

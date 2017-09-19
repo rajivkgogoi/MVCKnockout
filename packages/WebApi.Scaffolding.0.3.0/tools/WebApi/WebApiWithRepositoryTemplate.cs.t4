@@ -1,0 +1,95 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.ServiceModel;
+using System.ServiceModel.Web;
+using Microsoft.ApplicationServer.Http;
+using Microsoft.ApplicationServer.Http.Dispatcher;
+using <#= Model.Namespace #>.Models;
+using <#= Model.Namespace #>.Resources;
+
+namespace <#= Model.Namespace #>
+{ 
+	[ServiceContract]
+    public class <#= Model.ApiName #>
+    {
+		private readonly <#= RepositoryInterface #> <#= RepositoryName #>;
+
+<# if (!Model.UseIoC) { #>
+		// If you are using Dependency Injection, you can delete the following constructor
+		public <#= Model.ApiName #> () : this(new <#= RepositoryInterface.Remove(0, 1) #>()) 
+		{
+		}
+<# } #>
+
+		public <#= Model.ApiName #> (<#= RepositoryInterface #> <#= RepositoryName #>) 
+		{
+			this.<#= RepositoryName #> = <#= RepositoryName #>;
+		}
+
+        [WebGet(UriTemplate = "{id}")]
+        public HttpResponseMessage<<#= Model.ResourceName #>> Get(int id)
+        {
+			var item = this.<#= RepositoryName #>.Find(id);
+			if (item == null)
+			{
+                var notFoundResponse = new HttpResponseMessage();
+                notFoundResponse.StatusCode = HttpStatusCode.NotFound;
+                notFoundResponse.Content = new StringContent("Item not found");
+                throw new HttpResponseException(notFoundResponse);
+            }
+            var response = new HttpResponseMessage<<#= Model.ResourceName #>>(item);
+
+            // set it to expire in 5 minutes
+            response.Content.Headers.Expires = new DateTimeOffset(DateTime.Now.AddSeconds(30));
+            return response;
+        }
+
+        [WebInvoke(UriTemplate = "", Method = "POST")]
+        public HttpResponseMessage<<#= Model.ResourceName #>> Post(<#= Model.ResourceName #> item)
+        {
+			this.<#= RepositoryName #>.InsertOrUpdate(item);
+            this.<#= RepositoryName #>.Save();
+
+            var response = new HttpResponseMessage<<#= Model.ResourceName #>>(item);
+            response.StatusCode = HttpStatusCode.Created;
+            response.Headers.Location = new Uri("<#= Model.Route #>/" + item.Id, UriKind.Relative);
+            return response;
+        }
+
+        [WebInvoke(UriTemplate = "{id}", Method = "PUT")]
+        public <#= Model.ResourceName #> Put(int id, <#= Model.ResourceName #> item)
+        {
+			this.<#= RepositoryName #>.InsertOrUpdate(item);
+            this.<#= RepositoryName #>.Save();
+            return item;
+        }
+
+        [WebInvoke(UriTemplate = "{id}", Method = "DELETE")]
+        public HttpResponseMessage Delete(int id)
+        {
+			this.<#= RepositoryName #>.Delete(id);
+            this.<#= RepositoryName #>.Save();
+            return new HttpResponseMessage(HttpStatusCode.NoContent);
+        }
+ 
+	}
+}
+
+<#+
+	string RepositoryInterface {
+		get {
+			return "I" + Model.ResourceName + "Repository";
+		}
+	}
+
+	string RepositoryName {
+		get {
+			return Model.ResourceName.ToLower() + "Repository";
+		}
+	}
+#>

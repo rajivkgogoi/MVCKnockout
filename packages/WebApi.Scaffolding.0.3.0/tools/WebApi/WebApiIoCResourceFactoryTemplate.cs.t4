@@ -1,0 +1,40 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+using System;
+using System.Net.Http;
+using System.ServiceModel;
+using Microsoft.ApplicationServer.Http.Description;
+using StructureMap;
+
+namespace <#= Model.Namespace #>.DependencyResolution
+{
+    public class IoCResourceFactory : IResourceFactory
+    {
+        private readonly IContainer _container;
+
+        public IoCResourceFactory(IContainer _container)
+        {
+            this._container = _container;
+        }
+
+        public object GetInstance(Type serviceType, InstanceContext instanceContext, HttpRequestMessage request)
+        {
+            if (serviceType == null) return null;
+            try
+            {
+                return serviceType.IsAbstract || serviceType.IsInterface
+                         ? _container.TryGetInstance(serviceType)
+                         : _container.GetInstance(serviceType);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public void ReleaseInstance(InstanceContext instanceContext, object service)
+        {
+            // no op
+        }
+    }
+}

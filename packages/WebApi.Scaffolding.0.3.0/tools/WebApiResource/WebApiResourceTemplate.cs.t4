@@ -1,0 +1,16 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace <#= Model.Namespace #>.Resources
+{ 
+    public class <#= Model.ResourceName #>
+    {
+		public int Id { get; set; }
+
+		//TODO: Add other properties below
+	}
+}
